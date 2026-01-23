@@ -1,0 +1,21 @@
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# .NET / backend
+backend/**/bin/
+backend/**/obj/
+backend/**/*.user
+backend/**/*.suo
+backend/**/*.db
+
+# SQLite
+*.db
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
