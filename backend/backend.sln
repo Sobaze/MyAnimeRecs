@@ -1,8 +1,16 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyAnimeRecs.Api", "MyAnimeRecs.Api\MyAnimeRecs.Api.csproj", "{F30668F7-AC6C-01EC-794F-8EBCDB581B8F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{67E95F91-5B1A-4A74-9EB1-208BFF26A117}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyAnimeRecs.Api", "src\MyAnimeRecs.Api\MyAnimeRecs.Api.csproj", "{F9D34007-EB16-4C12-BE1F-17CB9FC1BC9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyAnimeRecs.Domain", "src\MyAnimeRecs.Domain\MyAnimeRecs.Domain.csproj", "{06F3260C-3B39-4CEC-9D78-1E1FC76B6937}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyAnimeRecs.Application", "src\MyAnimeRecs.Application\MyAnimeRecs.Application.csproj", "{90BC8EC6-DF53-4A6E-97C9-7299DC718D28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyAnimeRecs.Infrastructure", "src\MyAnimeRecs.Infrastructure\MyAnimeRecs.Infrastructure.csproj", "{27A80EF8-FF86-4448-9441-4A52AB8A7A78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -10,15 +18,33 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F30668F7-AC6C-01EC-794F-8EBCDB581B8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F30668F7-AC6C-01EC-794F-8EBCDB581B8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F30668F7-AC6C-01EC-794F-8EBCDB581B8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F30668F7-AC6C-01EC-794F-8EBCDB581B8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9D34007-EB16-4C12-BE1F-17CB9FC1BC9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9D34007-EB16-4C12-BE1F-17CB9FC1BC9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9D34007-EB16-4C12-BE1F-17CB9FC1BC9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9D34007-EB16-4C12-BE1F-17CB9FC1BC9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06F3260C-3B39-4CEC-9D78-1E1FC76B6937}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06F3260C-3B39-4CEC-9D78-1E1FC76B6937}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06F3260C-3B39-4CEC-9D78-1E1FC76B6937}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06F3260C-3B39-4CEC-9D78-1E1FC76B6937}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90BC8EC6-DF53-4A6E-97C9-7299DC718D28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90BC8EC6-DF53-4A6E-97C9-7299DC718D28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90BC8EC6-DF53-4A6E-97C9-7299DC718D28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90BC8EC6-DF53-4A6E-97C9-7299DC718D28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27A80EF8-FF86-4448-9441-4A52AB8A7A78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27A80EF8-FF86-4448-9441-4A52AB8A7A78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27A80EF8-FF86-4448-9441-4A52AB8A7A78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27A80EF8-FF86-4448-9441-4A52AB8A7A78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7A3B49CF-123C-413D-A1C1-0916CDF92BFA}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F9D34007-EB16-4C12-BE1F-17CB9FC1BC9C} = {67E95F91-5B1A-4A74-9EB1-208BFF26A117}
+		{06F3260C-3B39-4CEC-9D78-1E1FC76B6937} = {67E95F91-5B1A-4A74-9EB1-208BFF26A117}
+		{90BC8EC6-DF53-4A6E-97C9-7299DC718D28} = {67E95F91-5B1A-4A74-9EB1-208BFF26A117}
+		{27A80EF8-FF86-4448-9441-4A52AB8A7A78} = {67E95F91-5B1A-4A74-9EB1-208BFF26A117}
 	EndGlobalSection
 EndGlobal

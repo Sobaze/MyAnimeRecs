@@ -1,10 +1,30 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [status, setStatus] = useState<string>('loading weather...');
+
+  useEffect(() => {
+    fetch('/api/weatherforecast')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data.status)
+        setStatus(data.status)
+      })
+      .catch((error) => {
+        console.error('Error fetching weather data:', error);
+        setStatus('Error fetching weather data');
+      });
+  }, []);
+ 
 
   return (
     <>
@@ -21,6 +41,7 @@ function App() {
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
+        <p>Weather API status: {status}</p>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
