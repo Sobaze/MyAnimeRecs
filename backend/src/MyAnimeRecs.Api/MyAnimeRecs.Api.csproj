@@ -1,13 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>3c4f7f7e-13bf-4f46-a43e-e43510175f37</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.23" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.23" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.23" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
