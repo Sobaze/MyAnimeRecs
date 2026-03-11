@@ -42,3 +42,9 @@ export type ApiErrorResponse = {
   message: string
   details?: string
 }
+
+export type ErrorPayload = {
+  message?: string
+  error?: string
+  details?: string
+}
