@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import type { TopGenre } from '../../types/api'
+import { api } from '../../api/client'
+import { ApiError } from '../../api/errors'
+import { normalizeUsername } from '../../utils/normalize'
 
 type UseTopGenresResult = {
   isLoading: boolean
@@ -14,13 +17,28 @@ export function useTopGenres(): UseTopGenresResult {
   const [items, setItems] = useState<TopGenre[]>([])
 
   async function load(username: string, limit = 10): Promise<void> {
-    void username
-    void limit
+    const normalizedUsername = normalizeUsername(username)
+    if (!normalizedUsername) {
+      setError('Username is required.')
+      setItems([])
+      return
+    }
+    const limitValue = limit > 0 ? limit : 10
     setIsLoading(true)
-    setError(null)
-    setItems([])
-    setIsLoading(false)
-    throw new Error('Not implemented yet: useTopGenres.load')
+    try {
+      const response = await api.getUserTopGenres(normalizedUsername, limitValue)
+      setItems(response)
+    } catch (error: unknown) {
+      if (error instanceof ApiError) {
+        setError(error.message)
+      } else if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError('Unexpected error occurred while loading top genres.')
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return {

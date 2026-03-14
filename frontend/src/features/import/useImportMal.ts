@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import type { ImportSummary } from '../../types/api'
+import { api } from '../../api/client'
+import { ApiError } from '../../api/errors'
+import { normalizeUsername } from '../../utils/normalize'
 
 type UseImportMalResult = {
   isLoading: boolean
@@ -14,12 +17,29 @@ export function useImportMal(): UseImportMalResult {
   const [summary, setSummary] = useState<ImportSummary | null>(null)
 
   async function runImport(username: string): Promise<void> {
-    void username
+    const normalizedUsername = normalizeUsername(username)
+    if (!normalizedUsername) {
+      setError('Username is required.')
+      setSummary(null)
+      return
+    }
+
     setIsLoading(true)
-    setError(null)
-    setSummary(null)
-    setIsLoading(false)
-    throw new Error('Not implemented yet: useImportMal.runImport')
+    try {
+      const result = await api.importMalUser(normalizedUsername)
+      setSummary(result)
+    } catch (error: unknown) {
+      setSummary(null)
+      if (error instanceof ApiError) {
+        setError(error.message)
+      } else if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError('Unexpected error occurred while importing MAL list.')
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return {

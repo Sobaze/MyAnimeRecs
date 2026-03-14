@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import type { RecommendationItem } from '../../types/api'
+import { api } from '../../api/client'
+import { ApiError } from '../../api/errors'
+import { normalizeUsername } from '../../utils/normalize'
 
 type UseRandomRecommendationsResult = {
   isLoading: boolean
@@ -14,13 +17,28 @@ export function useRandomRecommendations(): UseRandomRecommendationsResult {
   const [items, setItems] = useState<RecommendationItem[]>([])
 
   async function load(username: string, count = 3): Promise<void> {
-    void username
-    void count
+    const normalizedUsername = normalizeUsername(username)
+    if (!normalizedUsername) {
+      setError('Username is required.')
+      setItems([])
+      return
+    }
+    const itemCount = count > 0 ? count : 3
     setIsLoading(true)
-    setError(null)
-    setItems([])
-    setIsLoading(false)
-    throw new Error('Not implemented yet: useRandomRecommendations.load')
+    try {
+      const response = await api.recommendRandom(normalizedUsername, itemCount)
+      setItems(response)
+    } catch (error: unknown) {
+      if (error instanceof ApiError) {
+        setError(error.message)
+      } else if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError('Unexpected error occurred while loading random recommendations.')
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return {

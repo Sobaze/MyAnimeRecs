@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import type { UserAnimeListItem } from '../../types/api'
+import { api } from '../../api/client'
+import { ApiError } from '../../api/errors'
+import { normalizeUsername } from '../../utils/normalize'
 
 type UseAnimeListResult = {
   isLoading: boolean
   error: string | null
   items: UserAnimeListItem[]
-  load: (username: string) => Promise<void>
+  load: (username: string, status: string) => Promise<void>
 }
 
 export function useAnimeList(): UseAnimeListResult {
@@ -13,13 +16,29 @@ export function useAnimeList(): UseAnimeListResult {
   const [error, setError] = useState<string | null>(null)
   const [items, setItems] = useState<UserAnimeListItem[]>([])
 
-  async function load(username: string): Promise<void> {
-    void username
+  async function load(username: string, status: string): Promise<void> {
+    const normalizedUsername = normalizeUsername(username)
+    const statusToGet = status.toLowerCase()
+    if (!normalizedUsername) {
+      setError('Username is required.')
+      setItems([])
+      return
+    }
     setIsLoading(true)
-    setError(null)
-    setItems([])
-    setIsLoading(false)
-    throw new Error('Not implemented yet: useAnimeList.load')
+    try {
+      const response = await api.getUserAnimeList(normalizedUsername, statusToGet)
+      setItems(response)
+    } catch (error: unknown) {
+      if (error instanceof ApiError) {
+        setError(error.message)
+      } else if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError('Unexpected error occurred while loading anime list.')
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return {
