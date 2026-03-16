@@ -9,3 +9,10 @@ Also will include a section where it will generate out recommendations for frien
 
 
 It will is built in React on the frontend and using a .DOTNET backend.
+
+
+To run the project
+
+Frontend:  cd frontend -> npm run dev
+
+Backend: dotnet run --project src/MyAnimeRecs.Api

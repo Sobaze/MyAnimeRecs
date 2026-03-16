@@ -106,6 +106,9 @@ async function parseJsonResponse<T>(
     const message = payload?.message ?? fallbackMessage
     throw new ApiError(message, response.status, payload?.error, payload?.details)
   }
+  if (data === null) {
+    throw new ApiError('Response body is empty or not valid JSON.', response.status)
+  }
 
   return data as T
 }

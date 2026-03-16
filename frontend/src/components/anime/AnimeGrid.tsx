@@ -9,7 +9,7 @@ export function AnimeGrid({ items }: AnimeGridProps) {
   return (
     <div>
       {items.map((anime) => (
-        <AnimeCard key={anime.animeId} anime={anime} />
+        <AnimeCard key={anime.animeId} anime={anime}  />
       ))}
     </div>
   )

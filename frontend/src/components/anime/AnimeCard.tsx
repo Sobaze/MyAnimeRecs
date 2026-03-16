@@ -7,8 +7,9 @@ type AnimeCardProps = {
 export function AnimeCard({ anime }: AnimeCardProps) {
   return (
     <article>
-      <img src={anime.mainPictureMediumUrl ?? ''} alt={anime.title} />
       <h3>{anime.title}</h3>
+      <p>User Score: {anime.userScore ?? 'N/A'}</p>
+      <img src={anime.mainPictureMediumUrl ?? ''} alt={anime.title} />
     </article>
   )
 }
