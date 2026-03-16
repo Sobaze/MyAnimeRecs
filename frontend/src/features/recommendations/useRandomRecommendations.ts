@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import type { RecommendationItem } from '../../types/api'
 import { api } from '../../api/client'
 import { ApiError } from '../../api/errors'
@@ -16,7 +16,7 @@ export function useRandomRecommendations(): UseRandomRecommendationsResult {
   const [error, setError] = useState<string | null>(null)
   const [items, setItems] = useState<RecommendationItem[]>([])
 
-  async function load(username: string, count = 3): Promise<void> {
+  const load = useCallback(async (username: string, count = 3): Promise<void> => {
     const normalizedUsername = normalizeUsername(username)
     if (!normalizedUsername) {
       setError('Username is required.')
@@ -25,6 +25,7 @@ export function useRandomRecommendations(): UseRandomRecommendationsResult {
     }
     const itemCount = count > 0 ? count : 3
     setIsLoading(true)
+    setError(null)
     try {
       const response = await api.recommendRandom(normalizedUsername, itemCount)
       setItems(response)
@@ -39,7 +40,7 @@ export function useRandomRecommendations(): UseRandomRecommendationsResult {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
   return {
     isLoading,

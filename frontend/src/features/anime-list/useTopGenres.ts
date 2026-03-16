@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import type { TopGenre } from '../../types/api'
 import { api } from '../../api/client'
 import { ApiError } from '../../api/errors'
@@ -16,7 +16,7 @@ export function useTopGenres(): UseTopGenresResult {
   const [error, setError] = useState<string | null>(null)
   const [items, setItems] = useState<TopGenre[]>([])
 
-  async function load(username: string, limit = 10): Promise<void> {
+  const load = useCallback(async (username: string, limit = 10): Promise<void> => {
     const normalizedUsername = normalizeUsername(username)
     if (!normalizedUsername) {
       setError('Username is required.')
@@ -25,6 +25,7 @@ export function useTopGenres(): UseTopGenresResult {
     }
     const limitValue = limit > 0 ? limit : 10
     setIsLoading(true)
+    setError(null)
     try {
       const response = await api.getUserTopGenres(normalizedUsername, limitValue)
       setItems(response)
@@ -39,7 +40,7 @@ export function useTopGenres(): UseTopGenresResult {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
   return {
     isLoading,

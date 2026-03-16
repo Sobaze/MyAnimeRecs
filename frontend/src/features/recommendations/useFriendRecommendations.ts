@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import type { RecommendationItem } from '../../types/api'
 import { api } from '../../api/client'
 import { ApiError } from '../../api/errors'
@@ -17,7 +17,7 @@ export function useFriendRecommendations(): UseFriendRecommendationsResult {
   const [error, setError] = useState<string | null>(null)
   const [items, setItems] = useState<RecommendationItem[]>([])
 
-  async function load(username: string, genres: string[], maxItems = 10): Promise<void> {
+  const load = useCallback(async (username: string, genres: string[], maxItems = 10): Promise<void> => {
     const normalizedUsername = normalizeUsername(username)
     if (!normalizedUsername) {
       setError('Username is required.')
@@ -33,12 +33,14 @@ export function useFriendRecommendations(): UseFriendRecommendationsResult {
 
     const maxAmount = maxItems > 0 ? maxItems : 10
     setIsLoading(true)
+    setError(null)
     try {
       const response = await api.recommendForFriend(normalizedUsername, {
         genres: dedupedGenres,
         maxItems: maxAmount,
       })
       setItems(response)
+      setError(null)
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         setError(error.message)
@@ -50,7 +52,7 @@ export function useFriendRecommendations(): UseFriendRecommendationsResult {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
   return {
     isLoading,

@@ -1,6 +1,7 @@
 import { apiEndpoints } from './endpoints'
 import type {
   ImportSummary,
+  AnimeListStatus,
   RecommendForFriendRequest,
   RecommendationItem,
   TopGenre,
@@ -26,7 +27,7 @@ export async function importMalUser(username: string): Promise<ImportSummary> {
 //status strings'completed' | 'watching' | 'on_hold' | 'dropped' | 'plan_to_watch' = 'completed'
 export async function getUserAnimeList(
   username: string,
-  status: string,
+  status: AnimeListStatus,
 ): Promise<UserAnimeListItem[]> {
   const response = await fetch(apiEndpoints.getUserAnimeList(username, status), {
     method: 'GET',
@@ -60,7 +61,8 @@ export async function recommendForFriend(
   const response = await fetch(apiEndpoints.recommendForFriend(username), {
     method: 'POST',
     headers: {
-      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
     },
     body: JSON.stringify(request),
   })
@@ -84,7 +86,6 @@ export async function recommendRandom(username: string, count = 3): Promise<Reco
 // Utility function to parse JSON responses and handle errors
 async function parseJsonResponse<T>(
   response: Response,
-  options?: { allowEmpty?: boolean },
 ): Promise<T> {
   const text = await response.text()
 
@@ -104,10 +105,6 @@ async function parseJsonResponse<T>(
     const fallbackMessage = text && !data ? text : `Request failed with status ${response.status}`
     const message = payload?.message ?? fallbackMessage
     throw new ApiError(message, response.status, payload?.error, payload?.details)
-  }
-
-  if (data === null && !options?.allowEmpty) {
-    throw new ApiError('Expected JSON response body but received an empty response.', response.status)
   }
 
   return data as T

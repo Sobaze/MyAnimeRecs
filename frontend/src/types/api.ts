@@ -16,6 +16,8 @@ export type UserAnimeListItem = {
   genres: string[]
 }
 
+export type AnimeListStatus = 'completed' | 'watching' | 'on_hold' | 'dropped' | 'plan_to_watch'
+
 export type TopGenre = {
   name: string
   count: number

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import type { ImportSummary } from '../../types/api'
 import { api } from '../../api/client'
 import { ApiError } from '../../api/errors'
@@ -16,7 +16,7 @@ export function useImportMal(): UseImportMalResult {
   const [error, setError] = useState<string | null>(null)
   const [summary, setSummary] = useState<ImportSummary | null>(null)
 
-  async function runImport(username: string): Promise<void> {
+  const runImport = useCallback(async (username: string): Promise<void> => {
     const normalizedUsername = normalizeUsername(username)
     if (!normalizedUsername) {
       setError('Username is required.')
@@ -25,6 +25,7 @@ export function useImportMal(): UseImportMalResult {
     }
 
     setIsLoading(true)
+    setError(null)
     try {
       const result = await api.importMalUser(normalizedUsername)
       setSummary(result)
@@ -40,7 +41,7 @@ export function useImportMal(): UseImportMalResult {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
   return {
     isLoading,
