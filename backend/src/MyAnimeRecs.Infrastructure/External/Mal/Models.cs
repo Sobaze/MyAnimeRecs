@@ -70,3 +70,20 @@ public sealed class MalListStatus
     [JsonPropertyName("score")]
     public decimal? Score { get; set; }
 }
+
+public sealed class MalRankingResponse
+{
+    [JsonPropertyName("data")]
+    public List<MalRankingAnimeItem> Data { get; set; } = new();
+
+    [JsonPropertyName("paging")]
+    public MalPaging? Paging { get; set; }
+}
+
+public sealed class MalRankingAnimeItem
+{
+    [JsonPropertyName("node")]
+    public MalAnimeNode Node { get; set; } = new();
+    [JsonPropertyName("ranking")]
+    public MalRanking? Ranking { get; set; }
+}

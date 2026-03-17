@@ -9,6 +9,13 @@ public class Anime
     public decimal? MeanScore { get; set; }
     public string? MainPictureMediumUrl { get; set; }
     public string? MainPictureLargeUrl { get; set; }
+    public bool IsCatalogSeeded { get; set; } = false;
+    public string? CatalogSource { get; set; }
+    public int? Popularity { get; set; }
+    public int? Rank { get; set; }
+    public int? Episodes { get; set; }
+    public string? Status { get; set; }
+    public DateTime? LastAnimeCatalogUpdateUtc { get; set; }
     public DateTime CreatedAtUtc { get; set; }
 
     public ICollection<AnimeGenre> AnimeGenres { get; set; } = new List<AnimeGenre>();

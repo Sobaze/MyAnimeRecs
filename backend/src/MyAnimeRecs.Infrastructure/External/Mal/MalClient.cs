@@ -43,4 +43,18 @@ public class MalClient(HttpClient httpClient) : IMalClient
 
         return payload;
     }
+    public async Task<IReadOnlyCollection<MalRankingAnimeItem>> GetAnimeRankingAsync(string rankingType,int limit, int offset, CancellationToken cancellationToken = default)
+    {
+        var allItems = new List<MalRankingAnimeItem>();
+        var nextUrl = $"anime/ranking?ranking_type={Uri.EscapeDataString(rankingType)}&limit={limit}&offset={offset}&fields=mean,genres,main_picture";
+
+        while (!string.IsNullOrWhiteSpace(nextUrl))
+        {
+            var response = await SendAndReadRankingAsync(nextUrl, cancellationToken);
+            allItems.AddRange(response.Data);
+            nextUrl = response.Paging?.Next;
+        }
+
+        return allItems;
+    }
 }

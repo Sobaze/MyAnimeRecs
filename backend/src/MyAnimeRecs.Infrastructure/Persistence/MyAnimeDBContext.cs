@@ -16,6 +16,7 @@ namespace MyAnimeRecs.Infrastructure.Persistence
         public DbSet<AnimeGenre> AnimeGenres => Set<AnimeGenre>();
         public DbSet<UserAnimeEntry> UserAnimeEntries => Set<UserAnimeEntry>();
         public DbSet<Recommendation> Recommendations => Set<Recommendation>();
+        public DbSet<AnimeCatalog> AnimeCatalog => Set<AnimeCatalog>();
 
         IQueryable<Anime> IApplicationDbContext.Animes => Animes;
         IQueryable<UserProfile> IApplicationDbContext.UserProfiles => UserProfiles;
@@ -23,6 +24,7 @@ namespace MyAnimeRecs.Infrastructure.Persistence
         IQueryable<AnimeGenre> IApplicationDbContext.AnimeGenres => AnimeGenres;
         IQueryable<UserAnimeEntry> IApplicationDbContext.UserAnimeEntries => UserAnimeEntries;
         IQueryable<Recommendation> IApplicationDbContext.Recommendations => Recommendations;
+        IQueryable<AnimeCatalog> IApplicationDbContext.AnimeCatalog => AnimeCatalog;
 
         void IApplicationDbContext.Add<T>(T entity) => base.Add(entity);
 
@@ -118,6 +120,20 @@ namespace MyAnimeRecs.Infrastructure.Persistence
                     .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasIndex(x => new { x.UserProfileId, x.AnimeId }).IsUnique();
+            });
+            modelBuilder.Entity<AnimeCatalog>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Provider).IsRequired().HasMaxLength(100);
+                entity.Property(x => x.SyncType).IsRequired().HasMaxLength(100);
+                entity.Property(x => x.SourceAnimeId).IsRequired().HasMaxLength(100);
+                entity.Property(x => x.SourceType).HasConversion<string>().IsRequired().HasMaxLength(50);
+                entity.Property(x => x.Title).IsRequired().HasMaxLength(250);
+                entity.Property(x => x.MeanScore).HasPrecision(4, 2);
+                entity.Property(x => x.MainPictureMediumUrl).HasMaxLength(1000);
+                entity.Property(x => x.MainPictureLargeUrl).HasMaxLength(1000);
+                entity.Property(x => x.CreatedAtUtc).IsRequired();
+                entity.HasIndex(x => new { x.SourceType, x.SourceAnimeId }).IsUnique();
             });
         }
     }
