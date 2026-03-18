@@ -37,6 +37,21 @@ public sealed class MalAnimeNode
     [JsonPropertyName("mean")]
     public decimal? Mean { get; set; }
 
+    [JsonPropertyName("rank")]
+    public int? Rank { get; set; }
+
+    [JsonPropertyName("popularity")]
+    public int? Popularity { get; set; }
+
+    [JsonPropertyName("media_type")]
+    public string? MediaType { get; set; }
+
+    [JsonPropertyName("status")]
+    public string? Status { get; set; }
+
+    [JsonPropertyName("num_episodes")]
+    public int? NumEpisodes { get; set; }
+
     [JsonPropertyName("main_picture")]
     public MalMainPicture? MainPicture { get; set; }
 
@@ -84,6 +99,13 @@ public sealed class MalRankingAnimeItem
 {
     [JsonPropertyName("node")]
     public MalAnimeNode Node { get; set; } = new();
+
     [JsonPropertyName("ranking")]
     public MalRanking? Ranking { get; set; }
+}
+
+public sealed class MalRanking
+{
+    [JsonPropertyName("rank")]
+    public int? Rank { get; set; }
 }

@@ -2,7 +2,9 @@ namespace MyAnimeRecs.Application.Models.Catalog;
 
 public class CatalogSeedResultDto
 {
-    public int TotalEntries { get; set; }
-    public int CreatedEntries { get; set; }
-    public int UpdatedEntries { get; set; }
+    public int TotalProcessed { get; set; }
+    public int CreatedAnimes { get; set; }
+    public int UpdatedAnimes { get; set; }
+    public int CreatedGenres { get; set; }
+    public int CreatedAnimeGenreLinks { get; set; }
 }

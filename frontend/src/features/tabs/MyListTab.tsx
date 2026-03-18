@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useAnimeList } from '../anime-list/useAnimeList'
-import { AnimeListPanel } from '../../components/anime/AnimeListPanel'
+import { AnimeGrid } from '../../components/anime/AnimeGrid'
 import { LoadingState } from '../../components/common/LoadingState'
 import { ErrorState } from '../../components/common/ErrorState'
 import { EmptyState } from '../../components/common/EmptyState'
@@ -20,5 +20,5 @@ export function MyListTab({ username }: MyListTabProps) {
   if (error) return <ErrorState message={error} />
   if (items.length === 0) return <EmptyState text="No anime found in your completed list." />
 
-  return <AnimeListPanel items={items} />
+  return <AnimeGrid items={items} />
 }

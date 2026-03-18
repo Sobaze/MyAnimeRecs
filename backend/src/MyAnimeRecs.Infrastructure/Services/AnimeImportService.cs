@@ -23,6 +23,7 @@ public class AnimeImportService(IApplicationDbContext dbContext, IMalClient malC
             {
                 Id = Guid.NewGuid(),
                 Username = username,
+                LastImportAtUtc = DateTime.UtcNow,
                 CreatedAtUtc = DateTime.UtcNow
             };
             dbContext.Add(profile);
@@ -43,7 +44,7 @@ public class AnimeImportService(IApplicationDbContext dbContext, IMalClient malC
             .Select(x => new { x.AnimeId, x.GenreId })
             .ToListAsync(cancellationToken);
         var animeGenreLinks = existingAnimeGenreLinks
-            .Select(x => $"{x.AnimeId:N}:{x.GenreId:N}")
+            .Select(x => GenreHelpers.BuildAnimeGenreLinkKey(x.AnimeId, x.GenreId))
             .ToHashSet(StringComparer.Ordinal);
 
         var existingUserEntries = await dbContext.UserAnimeEntries
@@ -91,7 +92,7 @@ public class AnimeImportService(IApplicationDbContext dbContext, IMalClient malC
             foreach (var externalGenre in entry.Node.Genres)
             {
                 var genreName = externalGenre.Name.Trim();
-                var normalizedGenreName = NormalizeGenreName(genreName);
+                var normalizedGenreName = GenreHelpers.NormalizeGenreName(genreName);
                 if (string.IsNullOrWhiteSpace(normalizedGenreName))
                 {
                     continue;
@@ -109,7 +110,7 @@ public class AnimeImportService(IApplicationDbContext dbContext, IMalClient malC
                     genresByNormalizedName[normalizedGenreName] = genre;
                 }
 
-                var linkKey = BuildAnimeGenreLinkKey(anime.Id, genre.Id);
+                var linkKey = GenreHelpers.BuildAnimeGenreLinkKey(anime.Id, genre.Id);
                 if (!animeGenreLinks.Contains(linkKey))
                 {
                     dbContext.Add(new AnimeGenre
@@ -151,6 +152,8 @@ public class AnimeImportService(IApplicationDbContext dbContext, IMalClient malC
             }
         }
 
+        profile.LastImportAtUtc = DateTime.UtcNow;
+
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return new ImportResultDto
@@ -162,7 +165,4 @@ public class AnimeImportService(IApplicationDbContext dbContext, IMalClient malC
         };
     }
 
-    private static string NormalizeGenreName(string value) => value.Trim().ToLowerInvariant();
-
-    private static string BuildAnimeGenreLinkKey(Guid animeId, Guid genreId) => $"{animeId:N}:{genreId:N}";
 }

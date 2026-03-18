@@ -1,4 +1,7 @@
 export const apiEndpoints = {
+  getCatalogStatus: () => '/api/catalog/status',
+  ensureCatalogFresh: () => '/api/catalog/ensure-fresh',
+
   importMalUser: (username: string) => `/api/import/mal/${encodeURIComponent(username)}`,
 
   getUserAnimeList: (username: string, status = 'completed') =>

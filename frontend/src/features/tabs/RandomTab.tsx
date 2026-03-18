@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useRandomRecommendations } from '../recommendations/useRandomRecommendations'
-import { RandomRecommendationPanel } from '../../components/recommendations/RandomRecommendationPanel'
+import { RecommendationGrid } from '../../components/recommendations/RecommendationGrid'
 import { LoadingState } from '../../components/common/LoadingState'
 import { ErrorState } from '../../components/common/ErrorState'
 import { EmptyState } from '../../components/common/EmptyState'
@@ -31,7 +31,7 @@ export function RandomTab({ username }: RandomTabProps) {
         <EmptyState text="No recommendations found." />
       )}
       {!isLoading && !error && items.length > 0 && (
-        <RandomRecommendationPanel items={items} />
+        <RecommendationGrid items={items} />
       )}
     </div>
   )

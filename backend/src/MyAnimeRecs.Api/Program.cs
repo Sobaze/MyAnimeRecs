@@ -81,6 +81,7 @@ app.UseExceptionHandler(exceptionApp =>
 app.UseHttpsRedirection();
 
 app.MapImportEndpoints();
+app.MapCatalogEndpoints();
 app.MapRecommendationEndpoints();
 app.MapUserEndpoints();
 

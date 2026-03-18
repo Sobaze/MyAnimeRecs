@@ -50,3 +50,26 @@ export type ErrorPayload = {
   error?: string
   details?: string
 }
+
+export type CatalogStatus = {
+  isSeeded: boolean
+  totalCatalogAnime: number
+  lastRunAtUtc: string | null
+  lastSuccessAtUtc: string | null
+  needsRefresh: boolean
+  lastError: string | null
+}
+
+export type CatalogSeedResult = {
+  totalProcessed: number
+  createdAnimes: number
+  updatedAnimes: number
+  createdGenres: number
+  createdAnimeGenreLinks: number
+}
+
+export type EnsureCatalogFreshResult = {
+  actionTaken: string
+  status: CatalogStatus
+  seedResult: CatalogSeedResult | null
+}

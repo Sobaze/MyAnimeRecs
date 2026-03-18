@@ -6,12 +6,14 @@ using MyAnimeRecs.Domain.Entities;
 
 namespace MyAnimeRecs.Infrastructure.Services;
 
-public class RecommendationService(IApplicationDbContext dbContext, IAnimeImportService animeImportService) : IRecommendationService
+public class RecommendationService(IApplicationDbContext dbContext, IAnimeImportService animeImportService, IAnimeCatalogService animeCatalogService) : IRecommendationService
 {
+    private static readonly TimeSpan ImportRefreshInterval = TimeSpan.FromHours(12);
+
     public async Task<IReadOnlyCollection<RecommendationItemDto>> RecommendByGenresAsync(RecommendByGenresRequest request, CancellationToken cancellationToken = default)
     {
         var normalizedGenres = request.Genres
-            .Select(NormalizeGenreName)
+            .Select(GenreHelpers.NormalizeGenreName)
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
@@ -69,7 +71,7 @@ public class RecommendationService(IApplicationDbContext dbContext, IAnimeImport
             })
             .OrderByDescending(x => x.Score)
             .ThenBy(x => x.Title)
-            .Take(Math.Max(1, request.MaxItems))
+            .Take(Math.Clamp(request.MaxItems, 1, 50))
             .ToList();
     }
 
@@ -80,12 +82,11 @@ public class RecommendationService(IApplicationDbContext dbContext, IAnimeImport
             return Array.Empty<RecommendationItemDto>();
         }
 
-        await animeImportService.ImportCompletedFromMalUsernameAsync(
-            new ImportFromMalUsernameRequest { Username = request.Username },
-            cancellationToken);
+        var normalizedUsername = request.Username.Trim();
+        await EnsureUserImportFreshAsync(normalizedUsername, cancellationToken);
 
         var userProfileId = await dbContext.UserProfiles
-            .Where(x => x.Username == request.Username)
+            .Where(x => x.Username == normalizedUsername)
             .Select(x => x.Id)
             .FirstAsync(cancellationToken);
 
@@ -134,7 +135,7 @@ public class RecommendationService(IApplicationDbContext dbContext, IAnimeImport
             })
             .OrderByDescending(x => x.Score)
             .ThenBy(x => x.Title)
-            .Take(Math.Max(1, request.MaxItems))
+            .Take(Math.Clamp(request.MaxItems, 1, 50))
             .ToList();
     }
 
@@ -147,7 +148,7 @@ public class RecommendationService(IApplicationDbContext dbContext, IAnimeImport
         }
 
         var normalizedGenres = request.Genres
-            .Select(NormalizeGenreName)
+            .Select(GenreHelpers.NormalizeGenreName)
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
@@ -195,7 +196,7 @@ public class RecommendationService(IApplicationDbContext dbContext, IAnimeImport
             })
             .OrderByDescending(x => x.Score)
             .ThenBy(x => x.Title)
-            .Take(Math.Max(1, request.MaxItems))
+            .Take(Math.Clamp(request.MaxItems, 1, 50))
             .ToList();
     }
 
@@ -206,9 +207,36 @@ public class RecommendationService(IApplicationDbContext dbContext, IAnimeImport
             return Array.Empty<RecommendationItemDto>();
         }
 
-        var candidates = await RecommendByMalUsernameAsync(
-            new RecommendByMalUsernameRequest { Username = username, MaxItems = 100 },
-            cancellationToken);
+        var normalizedUsername = username.Trim();
+        await EnsureUserImportFreshAsync(normalizedUsername, cancellationToken);
+        await animeCatalogService.EnsureFreshAsync(cancellationToken);
+
+        var userProfileId = await dbContext.UserProfiles
+            .Where(x => x.Username == normalizedUsername)
+            .Select(x => x.Id)
+            .FirstAsync(cancellationToken);
+
+        var watchedAnimeIds = await dbContext.UserAnimeEntries
+            .Where(x => x.UserProfileId == userProfileId)
+            .Select(x => x.AnimeId)
+            .ToListAsync(cancellationToken);
+
+        var watchedSet = watchedAnimeIds.ToHashSet();
+
+        var candidates = await dbContext.Animes
+            .Where(x => x.IsCatalogSeeded && !watchedSet.Contains(x.Id))
+            .Select(x => new RecommendationItemDto
+            {
+                AnimeId = x.Id,
+                Title = x.Title,
+                MainPictureMediumUrl = x.MainPictureMediumUrl,
+                MainPictureLargeUrl = x.MainPictureLargeUrl,
+                SourceType = x.SourceType.ToString(),
+                SourceAnimeId = x.SourceAnimeId,
+                Score = x.MeanScore ?? 0,
+                Reason = "Random unseen pick from global catalog"
+            })
+            .ToListAsync(cancellationToken);
 
         var candidateList = candidates.ToList();
         if (candidateList.Count == 0)
@@ -221,5 +249,20 @@ public class RecommendationService(IApplicationDbContext dbContext, IAnimeImport
         return shuffled.Take(targetCount).ToList();
     }
 
-    private static string NormalizeGenreName(string value) => value.Trim().ToLowerInvariant();
+    private async Task EnsureUserImportFreshAsync(string username, CancellationToken cancellationToken)
+    {
+        var userProfile = await dbContext.UserProfiles
+            .FirstOrDefaultAsync(x => x.Username == username, cancellationToken);
+
+        var shouldImport = userProfile is null
+            || !userProfile.LastImportAtUtc.HasValue
+            || userProfile.LastImportAtUtc.Value <= DateTime.UtcNow.Subtract(ImportRefreshInterval);
+
+        if (shouldImport)
+        {
+            await animeImportService.ImportCompletedFromMalUsernameAsync(
+                new ImportFromMalUsernameRequest { Username = username },
+                cancellationToken);
+        }
+    }
 }

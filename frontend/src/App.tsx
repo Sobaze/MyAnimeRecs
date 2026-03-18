@@ -1,9 +1,8 @@
-import {useState } from 'react'
+import { useState } from 'react'
 import './App.css'
-import { useImportMal } from './features/import/useImportMal'
+import { useImportFlow } from './features/import/useImportFlow'
 import { AppShell } from './components/layout/AppShell'
 import { ImportForm } from './components/import/ImportForm'
-import { ImportSummary } from './components/import/ImportSummary'
 import { LoadingState } from './components/common/LoadingState'
 import { ErrorState } from './components/common/ErrorState'
 import { MyListTab } from './features/tabs/MyListTab'
@@ -16,11 +15,10 @@ function App() {
   const [inputUsername, setInputUsername] = useState('')
   const [activeTab, setActiveTab] = useState<Tab>('list')
 
-  const { isLoading, error, summary, runImport } = useImportMal()
-  const confirmedUsername = summary?.username ?? ''
+  const { step, error, confirmedUsername, startImport } = useImportFlow()
 
   function handleImport() {
-    runImport(inputUsername)
+    startImport(inputUsername)
   }
 
   if (!confirmedUsername) {
@@ -30,11 +28,11 @@ function App() {
           username={inputUsername}
           onUsernameChange={setInputUsername}
           onSubmit={handleImport}
-          disabled={isLoading}
+          disabled={step === 'catalog' || step === 'import'}
         />
-        {isLoading && <LoadingState text="Importing your anime list..." />}
+        {step === 'catalog' && <LoadingState text="Preparing anime catalog..." />}
+        {step === 'import' && <LoadingState text="Importing your MAL list..." />}
         {error && <ErrorState message={error} />}
-        {summary && <ImportSummary summary={summary} />}
       </AppShell>
     )
   }
@@ -64,9 +62,15 @@ function App() {
           For a Friend
         </button>
       </nav>
-      {activeTab === 'list' && <MyListTab username={confirmedUsername} />}
-      {activeTab === 'random' && <RandomTab username={confirmedUsername} />}
-      {activeTab === 'friend' && <FriendRecsTab key={confirmedUsername} username={confirmedUsername} />}
+      <div hidden={activeTab !== 'list'}>
+       <MyListTab username={confirmedUsername} />
+      </div> 
+      <div hidden={activeTab !== 'random'}>
+        <RandomTab username={confirmedUsername} />
+      </div>
+      <div hidden={activeTab !== 'friend'}>
+        <FriendRecsTab username={confirmedUsername} />
+      </div>
     </AppShell>
   )
 }

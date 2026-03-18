@@ -15,4 +15,4 @@ To run the project
 
 Frontend:  cd frontend -> npm run dev
 
-Backend: dotnet run --project src/MyAnimeRecs.Api
+Backend: cd backend -> dotnet run --project src/MyAnimeRecs.Api

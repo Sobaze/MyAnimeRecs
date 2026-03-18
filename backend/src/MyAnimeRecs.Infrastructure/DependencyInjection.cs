@@ -22,8 +22,10 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IAnimeImportService, AnimeImportService>();
+        services.AddScoped<IAnimeCatalogService, AnimeCatalogService>();
         services.AddScoped<IRecommendationService, RecommendationService>();
         services.AddScoped<IAnimeListQueryService, AnimeListQueryService>();
+        services.AddHostedService<CatalogRefreshHostedService>();
 
         return services;
     }

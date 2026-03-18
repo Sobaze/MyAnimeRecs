@@ -16,7 +16,7 @@ namespace MyAnimeRecs.Infrastructure.Persistence
         public DbSet<AnimeGenre> AnimeGenres => Set<AnimeGenre>();
         public DbSet<UserAnimeEntry> UserAnimeEntries => Set<UserAnimeEntry>();
         public DbSet<Recommendation> Recommendations => Set<Recommendation>();
-        public DbSet<AnimeCatalog> AnimeCatalog => Set<AnimeCatalog>();
+        public DbSet<CatalogSyncState> CatalogSyncStates => Set<CatalogSyncState>();
 
         IQueryable<Anime> IApplicationDbContext.Animes => Animes;
         IQueryable<UserProfile> IApplicationDbContext.UserProfiles => UserProfiles;
@@ -24,7 +24,7 @@ namespace MyAnimeRecs.Infrastructure.Persistence
         IQueryable<AnimeGenre> IApplicationDbContext.AnimeGenres => AnimeGenres;
         IQueryable<UserAnimeEntry> IApplicationDbContext.UserAnimeEntries => UserAnimeEntries;
         IQueryable<Recommendation> IApplicationDbContext.Recommendations => Recommendations;
-        IQueryable<AnimeCatalog> IApplicationDbContext.AnimeCatalog => AnimeCatalog;
+        IQueryable<CatalogSyncState> IApplicationDbContext.CatalogSyncStates => CatalogSyncStates;
 
         void IApplicationDbContext.Add<T>(T entity) => base.Add(entity);
 
@@ -43,6 +43,14 @@ namespace MyAnimeRecs.Infrastructure.Persistence
                 entity.Property(x => x.MeanScore).HasPrecision(4, 2);
                 entity.Property(x => x.MainPictureMediumUrl).HasMaxLength(1000);
                 entity.Property(x => x.MainPictureLargeUrl).HasMaxLength(1000);
+                entity.Property(x => x.IsCatalogSeeded).IsRequired();
+                entity.Property(x => x.CatalogSource).HasMaxLength(100);
+                entity.Property(x => x.Popularity);
+                entity.Property(x => x.Rank);
+                entity.Property(x => x.MediaType).HasMaxLength(50);
+                entity.Property(x => x.AiringStatus).HasMaxLength(50);
+                entity.Property(x => x.Episodes);
+                entity.Property(x => x.LastAnimeCatalogUpdateUtc);
                 entity.Property(x => x.CreatedAtUtc).IsRequired();
                 entity.HasIndex(x => new { x.SourceType, x.SourceAnimeId }).IsUnique();
             });
@@ -51,6 +59,7 @@ namespace MyAnimeRecs.Infrastructure.Persistence
             {
                 entity.HasKey(x => x.Id);
                 entity.Property(x => x.Username).IsRequired().HasMaxLength(100);
+                entity.Property(x => x.LastImportAtUtc);
                 entity.Property(x => x.CreatedAtUtc).IsRequired();
                 entity.HasIndex(x => x.Username).IsUnique();
             });
@@ -121,19 +130,18 @@ namespace MyAnimeRecs.Infrastructure.Persistence
 
                 entity.HasIndex(x => new { x.UserProfileId, x.AnimeId }).IsUnique();
             });
-            modelBuilder.Entity<AnimeCatalog>(entity =>
+
+            modelBuilder.Entity<CatalogSyncState>(entity =>
             {
                 entity.HasKey(x => x.Id);
-                entity.Property(x => x.Provider).IsRequired().HasMaxLength(100);
+                entity.Property(x => x.Provider).IsRequired().HasMaxLength(50);
                 entity.Property(x => x.SyncType).IsRequired().HasMaxLength(100);
-                entity.Property(x => x.SourceAnimeId).IsRequired().HasMaxLength(100);
-                entity.Property(x => x.SourceType).HasConversion<string>().IsRequired().HasMaxLength(50);
-                entity.Property(x => x.Title).IsRequired().HasMaxLength(250);
-                entity.Property(x => x.MeanScore).HasPrecision(4, 2);
-                entity.Property(x => x.MainPictureMediumUrl).HasMaxLength(1000);
-                entity.Property(x => x.MainPictureLargeUrl).HasMaxLength(1000);
-                entity.Property(x => x.CreatedAtUtc).IsRequired();
-                entity.HasIndex(x => new { x.SourceType, x.SourceAnimeId }).IsUnique();
+                entity.Property(x => x.LastOffset).IsRequired();
+                entity.Property(x => x.LastRunAtUtc);
+                entity.Property(x => x.LastSuccessAtUtc);
+                entity.Property(x => x.LastError).HasMaxLength(2000);
+
+                entity.HasIndex(x => new { x.Provider, x.SyncType }).IsUnique();
             });
         }
     }

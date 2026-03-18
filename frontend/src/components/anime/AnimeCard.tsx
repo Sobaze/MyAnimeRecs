@@ -9,7 +9,7 @@ export function AnimeCard({ anime }: AnimeCardProps) {
     <article>
       <h3>{anime.title}</h3>
       <p>User Score: {anime.userScore ?? 'N/A'}</p>
-      <img src={anime.mainPictureMediumUrl ?? ''} alt={anime.title} />
+      {anime.mainPictureMediumUrl && <img src={anime.mainPictureMediumUrl} alt={anime.title} style={{ width: '100%', display: 'block' }} />}
     </article>
   )
 }

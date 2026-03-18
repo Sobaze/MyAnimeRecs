@@ -2,6 +2,8 @@ import { apiEndpoints } from './endpoints'
 import type {
   ImportSummary,
   AnimeListStatus,
+  CatalogStatus,
+  EnsureCatalogFreshResult,
   RecommendForFriendRequest,
   RecommendationItem,
   TopGenre,
@@ -22,9 +24,30 @@ export async function importMalUser(username: string): Promise<ImportSummary> {
     return data
 }
 
+export async function getCatalogStatus(): Promise<CatalogStatus> {
+  const response = await fetch(apiEndpoints.getCatalogStatus(), {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+    },
+  })
+
+  return parseJsonResponse<CatalogStatus>(response)
+}
+
+export async function ensureCatalogFresh(): Promise<EnsureCatalogFreshResult> {
+  const response = await fetch(apiEndpoints.ensureCatalogFresh(), {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+    },
+  })
+
+  return parseJsonResponse<EnsureCatalogFreshResult>(response)
+}
+
 // Get the user's anime list with the specified status (default is 'completed'). The response includes details about each anime in the list, 
 // such as the title, main picture URLs, user score, mean score, and genres.
-//status strings'completed' | 'watching' | 'on_hold' | 'dropped' | 'plan_to_watch' = 'completed'
 export async function getUserAnimeList(
   username: string,
   status: AnimeListStatus,
@@ -40,7 +63,6 @@ export async function getUserAnimeList(
 }
 
 // Get the top genres for a user based on their completed anime list. The response includes the genre name and the count of completed anime in that genre.
-// want to change it to just get genres maybe? TODO
 export async function getUserTopGenres(username: string, limit = 10): Promise<TopGenre[]> {
   const response = await fetch(apiEndpoints.getUserTopGenres(username, limit), {
     method: 'GET',
@@ -71,7 +93,6 @@ export async function recommendForFriend(
 }
 
 // Recommend random anime that the user hasn't seen yet, based on their completed anime list. 
-// TODO: so compare all animes against the users completed list and then randomly select from the remaining ones. The count query parameter specifies how many recommendations to return.
 export async function recommendRandom(username: string, count = 3): Promise<RecommendationItem[]> {
   const response = await fetch(apiEndpoints.recommendRandom(username, count), {
     method: 'GET',
@@ -124,6 +145,8 @@ function isErrorPayload(value: unknown): value is ErrorPayload {
 }
 
 export const api = {
+  getCatalogStatus,
+  ensureCatalogFresh,
   importMalUser,
   getUserAnimeList,
   getUserTopGenres,

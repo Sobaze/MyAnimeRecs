@@ -43,18 +43,35 @@ public class MalClient(HttpClient httpClient) : IMalClient
 
         return payload;
     }
-    public async Task<IReadOnlyCollection<MalRankingAnimeItem>> GetAnimeRankingAsync(string rankingType,int limit, int offset, CancellationToken cancellationToken = default)
+    public async Task<MalRankingResponse> GetAnimeRankingPageAsync(string rankingType, int limit, int offset, CancellationToken cancellationToken = default)
     {
-        var allItems = new List<MalRankingAnimeItem>();
-        var nextUrl = $"anime/ranking?ranking_type={Uri.EscapeDataString(rankingType)}&limit={limit}&offset={offset}&fields=mean,genres,main_picture";
+        var url =
+            $"anime/ranking?ranking_type={Uri.EscapeDataString(rankingType)}&limit={limit}&offset={offset}&fields=mean,rank,popularity,media_type,status,num_episodes,genres,main_picture";
 
-        while (!string.IsNullOrWhiteSpace(nextUrl))
+        return await SendAndReadRankingAsync(url, cancellationToken);
+    }
+
+    private async Task<MalRankingResponse> SendAndReadRankingAsync(string url, CancellationToken cancellationToken)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, url);
+        using var response = await httpClient.SendAsync(request, cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
         {
-            var response = await SendAndReadRankingAsync(nextUrl, cancellationToken);
-            allItems.AddRange(response.Data);
-            nextUrl = response.Paging?.Next;
+            var errorText = await response.Content.ReadAsStringAsync(cancellationToken);
+            var message = string.IsNullOrWhiteSpace(errorText)
+                ? $"MAL API returned {(int)response.StatusCode} ({response.StatusCode})."
+                : errorText;
+
+            throw new MalApiException(response.StatusCode, message);
         }
 
-        return allItems;
+        var payload = await response.Content.ReadFromJsonAsync<MalRankingResponse>(cancellationToken: cancellationToken);
+        if (payload is null)
+        {
+            throw new MalApiException(HttpStatusCode.BadGateway, "MAL API returned an empty ranking response.");
+        }
+
+        return payload;
     }
 }

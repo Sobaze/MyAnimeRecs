@@ -14,7 +14,8 @@ public class Anime
     public int? Popularity { get; set; }
     public int? Rank { get; set; }
     public int? Episodes { get; set; }
-    public string? Status { get; set; }
+    public string? MediaType { get; set; }
+    public string? AiringStatus { get; set; }
     public DateTime? LastAnimeCatalogUpdateUtc { get; set; }
     public DateTime CreatedAtUtc { get; set; }
 

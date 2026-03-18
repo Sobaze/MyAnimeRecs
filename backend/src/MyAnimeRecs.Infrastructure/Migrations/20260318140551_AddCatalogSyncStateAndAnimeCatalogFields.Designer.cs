@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyAnimeRecs.Infrastructure.Persistence;
 
@@ -10,9 +11,11 @@ using MyAnimeRecs.Infrastructure.Persistence;
 namespace MyAnimeRecs.Infrastructure.Migrations
 {
     [DbContext(typeof(MyAnimeDBContext))]
-    partial class MyAnimeDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260318140551_AddCatalogSyncStateAndAnimeCatalogFields")]
+    partial class AddCatalogSyncStateAndAnimeCatalogFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.23");
@@ -21,10 +24,6 @@ namespace MyAnimeRecs.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AiringStatus")
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CatalogSource")
@@ -72,6 +71,10 @@ namespace MyAnimeRecs.Infrastructure.Migrations
 
                     b.Property<string>("SourceType")
                         .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 

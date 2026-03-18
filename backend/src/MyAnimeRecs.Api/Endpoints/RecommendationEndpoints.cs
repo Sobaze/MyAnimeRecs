@@ -41,11 +41,6 @@ public static class RecommendationEndpoints
         app.MapGet("/api/recommendations/random/{username}", async (string username, int? count, IRecommendationService recommendationService, CancellationToken cancellationToken) =>
             {
                 var result = await recommendationService.RecommendRandomUnseenForUserAsync(username, count ?? 3, cancellationToken);
-                if (result.Count == 0)
-                {
-                    return Results.NotFound(new { message = "No unseen recommendations found for this user." });
-                }
-
                 return Results.Ok(result);
             })
             .WithName("RecommendRandomUnseen")

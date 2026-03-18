@@ -4,6 +4,7 @@ namespace MyAnimeRecs.Application.Abstractions;
 
 public interface IAnimeCatalogService
 {
-    Task<CatalogSeedResultDto> SeedCatalogAsync(int animeId, CancellationToken cancellationToken = default);
-    Task<IEnumerable<CatalogSeedRequest>> SearchAnimeAsync(string query, CancellationToken cancellationToken = default);
+    Task<CatalogSeedResultDto> SeedCatalogAsync(CatalogSeedRequest request, CancellationToken cancellationToken = default);
+    Task<CatalogStatusDto> GetStatusAsync(CancellationToken cancellationToken = default);
+    Task<EnsureCatalogFreshResultDto> EnsureFreshAsync(CancellationToken cancellationToken = default);
 }
