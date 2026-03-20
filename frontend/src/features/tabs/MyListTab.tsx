@@ -20,5 +20,8 @@ export function MyListTab({ username }: MyListTabProps) {
   if (error) return <ErrorState message={error} />
   if (items.length === 0) return <EmptyState text="No anime found in your completed list." />
 
-  return <AnimeGrid items={items} />
+  return (
+  <AnimeGrid items={items} />
+  
+)
 }

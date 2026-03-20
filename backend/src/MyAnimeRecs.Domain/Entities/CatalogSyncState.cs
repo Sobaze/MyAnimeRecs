@@ -9,4 +9,6 @@ public class CatalogSyncState
     public DateTime? LastRunAtUtc { get; set; }
     public DateTime? LastSuccessAtUtc { get; set; }
     public string? LastError { get; set; }
+    public string? LeaseOwner { get; set; }
+    public DateTime? LeaseExpiresAtUtc { get; set; }
 }

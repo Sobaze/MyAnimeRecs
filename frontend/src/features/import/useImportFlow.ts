@@ -10,6 +10,7 @@ type UseImportFlowResult = {
   error: string | null
   confirmedUsername: string
   startImport: (username: string) => Promise<void>
+  reset: () => void
 }
 
 export function useImportFlow(): UseImportFlowResult {
@@ -44,10 +45,17 @@ export function useImportFlow(): UseImportFlowResult {
     }
   }, [])
 
+  const reset = useCallback(() => {
+    setStep('idle')
+    setError(null)
+    setConfirmedUsername('')
+  }, [])
+
   return {
     step,
     error,
     confirmedUsername,
-    startImport
+    startImport,
+    reset,
   }
 }

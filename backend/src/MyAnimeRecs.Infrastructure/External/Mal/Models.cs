@@ -55,6 +55,9 @@ public sealed class MalAnimeNode
     [JsonPropertyName("main_picture")]
     public MalMainPicture? MainPicture { get; set; }
 
+    [JsonPropertyName("synopsis")]
+    public string? Synopsis { get; set; }
+
     [JsonPropertyName("genres")]
     public List<MalGenre> Genres { get; set; } = new();
 }

@@ -9,6 +9,7 @@ public class Anime
     public decimal? MeanScore { get; set; }
     public string? MainPictureMediumUrl { get; set; }
     public string? MainPictureLargeUrl { get; set; }
+    public string? Synopsis { get; set; }
     public bool IsCatalogSeeded { get; set; } = false;
     public string? CatalogSource { get; set; }
     public int? Popularity { get; set; }

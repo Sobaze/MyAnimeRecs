@@ -27,9 +27,11 @@ public class AnimeListQueryService(IApplicationDbContext dbContext) : IAnimeList
                 Title = x.Anime.Title,
                 MainPictureMediumUrl = x.Anime.MainPictureMediumUrl,
                 MainPictureLargeUrl = x.Anime.MainPictureLargeUrl,
+                Synopsis = x.Anime.Synopsis,
                 Status = x.Status.ToString(),
                 UserScore = x.Score,
                 MeanScore = x.Anime.MeanScore,
+                SourceAnimeId = x.Anime.SourceAnimeId,
                 Genres = x.Anime.AnimeGenres.Select(g => g.Genre.Name).ToList()
             })
             .ToListAsync(cancellationToken);

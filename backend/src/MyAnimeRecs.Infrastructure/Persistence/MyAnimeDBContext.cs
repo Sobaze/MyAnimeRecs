@@ -43,6 +43,7 @@ namespace MyAnimeRecs.Infrastructure.Persistence
                 entity.Property(x => x.MeanScore).HasPrecision(4, 2);
                 entity.Property(x => x.MainPictureMediumUrl).HasMaxLength(1000);
                 entity.Property(x => x.MainPictureLargeUrl).HasMaxLength(1000);
+                entity.Property(x => x.Synopsis).HasMaxLength(4000);
                 entity.Property(x => x.IsCatalogSeeded).IsRequired();
                 entity.Property(x => x.CatalogSource).HasMaxLength(100);
                 entity.Property(x => x.Popularity);
@@ -140,6 +141,8 @@ namespace MyAnimeRecs.Infrastructure.Persistence
                 entity.Property(x => x.LastRunAtUtc);
                 entity.Property(x => x.LastSuccessAtUtc);
                 entity.Property(x => x.LastError).HasMaxLength(2000);
+                entity.Property(x => x.LeaseOwner).HasMaxLength(200);
+                entity.Property(x => x.LeaseExpiresAtUtc);
 
                 entity.HasIndex(x => new { x.Provider, x.SyncType }).IsUnique();
             });

@@ -5,5 +5,5 @@ type AppShellProps = {
 }
 
 export function AppShell({ children }: AppShellProps) {
-  return <div>{children}</div>
+  return <div className="app-shell">{children}</div>
 }

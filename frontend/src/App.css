@@ -1,42 +1,114 @@
-#root {
-  max-width: 1289000px;
+.app-shell {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 1.5rem;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.identity {
+  margin: 0;
+}
+
+.tabs-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.secondary {
+  background: #f5f2eb;
+  color: #312c22;
+}
+
+.anime-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.anime-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid #d9d1c6;
+  border-radius: 12px;
+  background: #fffefa;
+  overflow: hidden;
+}
+
+.card-title {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  min-height: 3.3rem;
+  border-bottom: 1px solid #ece5dc;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.card-content {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  align-items: start;
+  min-height: 170px;
+}
+
+.card-image {
+  width: 100px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #ece5dc;
+}
+
+.card-summary {
+  margin: 0;
+  color: #3b352b;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-score-row {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  border-top: 1px solid #ece5dc;
+  background: #faf5ed;
+  color: #2e2a24;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    padding: 1rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
   }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  .card-content {
+    grid-template-columns: 1fr;
+    min-height: 0;
   }
-}
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  .card-image {
+    width: 100%;
+    max-width: 220px;
+  }
 }

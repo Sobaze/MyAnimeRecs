@@ -6,6 +6,8 @@ public class RecommendationItemDto
     public string Title { get; set; } = string.Empty;
     public string? MainPictureMediumUrl { get; set; }
     public string? MainPictureLargeUrl { get; set; }
+    public string? Synopsis { get; set; }
+    public decimal? MeanScore { get; set; }
     public decimal Score { get; set; }
     public string Reason { get; set; } = string.Empty;
     public string SourceType { get; set; } = string.Empty;

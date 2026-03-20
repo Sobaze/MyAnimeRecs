@@ -15,10 +15,16 @@ function App() {
   const [inputUsername, setInputUsername] = useState('')
   const [activeTab, setActiveTab] = useState<Tab>('list')
 
-  const { step, error, confirmedUsername, startImport } = useImportFlow()
+  const { step, error, confirmedUsername, startImport, reset } = useImportFlow()
 
   function handleImport() {
     startImport(inputUsername)
+  }
+
+  function handleChangeUser() {
+    setInputUsername('')
+    setActiveTab('list')
+    reset()
   }
 
   if (!confirmedUsername) {
@@ -38,11 +44,17 @@ function App() {
   }
 
   return (
-    <AppShell>
-      <nav>
-        <button
-          type="button"
-          onClick={() => setActiveTab('list')}
+      <AppShell>
+        <div className="topbar">
+          <p className="identity">Current user: <strong>{confirmedUsername}</strong></p>
+          <button type="button" className="secondary" onClick={handleChangeUser}>
+            Change user
+          </button>
+        </div>
+        <nav className="tabs-nav">
+          <button
+            type="button"
+            onClick={() => setActiveTab('list')}
           disabled={activeTab === 'list'}
         >
           My List
@@ -58,16 +70,16 @@ function App() {
           type="button"
           onClick={() => setActiveTab('friend')}
           disabled={activeTab === 'friend'}
-        >
-          For a Friend
-        </button>
-      </nav>
-      <div hidden={activeTab !== 'list'}>
-       <MyListTab username={confirmedUsername} />
-      </div> 
-      <div hidden={activeTab !== 'random'}>
-        <RandomTab username={confirmedUsername} />
-      </div>
+          >
+            For a Friend
+          </button>
+        </nav>
+        <div hidden={activeTab !== 'list'}>
+          <MyListTab username={confirmedUsername} />
+        </div>
+        <div hidden={activeTab !== 'random'}>
+          <RandomTab username={confirmedUsername} />
+        </div>
       <div hidden={activeTab !== 'friend'}>
         <FriendRecsTab username={confirmedUsername} />
       </div>

@@ -10,10 +10,12 @@ export type UserAnimeListItem = {
   title: string
   mainPictureMediumUrl: string | null
   mainPictureLargeUrl: string | null
+  synopsis: string | null
   status: string
   userScore: number | null
   meanScore: number | null
   genres: string[]
+  sourceAnimeId: string 
 }
 
 export type AnimeListStatus = 'completed' | 'watching' | 'on_hold' | 'dropped' | 'plan_to_watch'
@@ -28,6 +30,8 @@ export type RecommendationItem = {
   title: string
   mainPictureMediumUrl: string | null
   mainPictureLargeUrl: string | null
+  synopsis: string | null
+  meanScore: number | null
   score: number
   reason: string
   sourceType: string

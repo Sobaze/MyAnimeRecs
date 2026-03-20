@@ -7,7 +7,7 @@ type RecommendationGridProps = {
 
 export function RecommendationGrid({ items }: RecommendationGridProps) {
   return (
-    <div>
+    <div className="anime-grid">
       {items.map((item) => (
         <RecommendationCard key={item.animeId} item={item} />
       ))}

@@ -6,7 +6,7 @@ using MyAnimeRecs.Domain.Entities;
 
 namespace MyAnimeRecs.Infrastructure.Services;
 
-public class RecommendationService(IApplicationDbContext dbContext, IAnimeImportService animeImportService, IAnimeCatalogService animeCatalogService) : IRecommendationService
+public class RecommendationService(IApplicationDbContext dbContext, IAnimeImportService animeImportService) : IRecommendationService
 {
     private static readonly TimeSpan ImportRefreshInterval = TimeSpan.FromHours(12);
 
@@ -58,17 +58,9 @@ public class RecommendationService(IApplicationDbContext dbContext, IAnimeImport
 
         return candidates
             .Where(x => !seenAnimeIds.Contains(x.Anime.Id))
-            .Select(x => new RecommendationItemDto
-            {
-                AnimeId = x.Anime.Id,
-                Title = x.Anime.Title,
-                MainPictureMediumUrl = x.Anime.MainPictureMediumUrl,
-                MainPictureLargeUrl = x.Anime.MainPictureLargeUrl,
-                SourceType = x.Anime.SourceType.ToString(),
-                SourceAnimeId = x.Anime.SourceAnimeId,
-                Score = x.MatchedGenreNames.Count,
-                Reason = $"Matched genres: {string.Join(", ", x.MatchedGenreNames)}"
-            })
+            .Select(x => x.Anime.ToRecommendationDto(
+                x.MatchedGenreNames.Count,
+                $"Matched genres: {string.Join(", ", x.MatchedGenreNames)}"))
             .OrderByDescending(x => x.Score)
             .ThenBy(x => x.Title)
             .Take(Math.Clamp(request.MaxItems, 1, 50))
@@ -104,7 +96,7 @@ public class RecommendationService(IApplicationDbContext dbContext, IAnimeImport
             .Select(g => new { GenreId = g.Key, Weight = g.Count() })
             .ToDictionaryAsync(x => x.GenreId, x => x.Weight, cancellationToken);
 
-        if (genreWeights.Count == 0)
+        if (!genreWeights.Any())
         {
             return Array.Empty<RecommendationItemDto>();
         }
@@ -122,17 +114,9 @@ public class RecommendationService(IApplicationDbContext dbContext, IAnimeImport
             .ToListAsync(cancellationToken);
 
         return candidates
-            .Select(x => new RecommendationItemDto
-            {
-                AnimeId = x.Anime.Id,
-                Title = x.Anime.Title,
-                MainPictureMediumUrl = x.Anime.MainPictureMediumUrl,
-                MainPictureLargeUrl = x.Anime.MainPictureLargeUrl,
-                SourceType = x.Anime.SourceType.ToString(),
-                SourceAnimeId = x.Anime.SourceAnimeId,
-                Score = x.MatchedGenres.Sum(g => genreWeights[g.GenreId]),
-                Reason = $"Based on your completed-list genres: {string.Join(", ", x.MatchedGenres.Select(g => g.Name).Distinct())}"
-            })
+            .Select(x => x.Anime.ToRecommendationDto(
+                x.MatchedGenres.Sum(g => genreWeights[g.GenreId]),
+                $"Based on your completed-list genres: {string.Join(", ", x.MatchedGenres.Select(g => g.Name).Distinct())}"))
             .OrderByDescending(x => x.Score)
             .ThenBy(x => x.Title)
             .Take(Math.Clamp(request.MaxItems, 1, 50))
@@ -183,17 +167,9 @@ public class RecommendationService(IApplicationDbContext dbContext, IAnimeImport
             .ToListAsync(cancellationToken);
 
         return candidates
-            .Select(x => new RecommendationItemDto
-            {
-                AnimeId = x.Anime.Id,
-                Title = x.Anime.Title,
-                MainPictureMediumUrl = x.Anime.MainPictureMediumUrl,
-                MainPictureLargeUrl = x.Anime.MainPictureLargeUrl,
-                SourceType = x.Anime.SourceType.ToString(),
-                SourceAnimeId = x.Anime.SourceAnimeId,
-                Score = (x.MatchedGenreNames.Count * 2m) + (((x.UserScore ?? 0m) / 10m) * 8m),
-                Reason = $"From your completed list. Your score: {(x.UserScore?.ToString("0.##") ?? "not rated")}/10. Matched genres: {string.Join(", ", x.MatchedGenreNames.Distinct())}"
-            })
+            .Select(x => x.Anime.ToRecommendationDto(
+                (x.MatchedGenreNames.Count * 2m) + (((x.UserScore ?? 0m) / 10m) * 8m),
+                $"From your completed list. Your score: {(x.UserScore?.ToString("0.##") ?? "not rated")}/10. Matched genres: {string.Join(", ", x.MatchedGenreNames.Distinct())}"))
             .OrderByDescending(x => x.Score)
             .ThenBy(x => x.Title)
             .Take(Math.Clamp(request.MaxItems, 1, 50))
@@ -209,7 +185,6 @@ public class RecommendationService(IApplicationDbContext dbContext, IAnimeImport
 
         var normalizedUsername = username.Trim();
         await EnsureUserImportFreshAsync(normalizedUsername, cancellationToken);
-        await animeCatalogService.EnsureFreshAsync(cancellationToken);
 
         var userProfileId = await dbContext.UserProfiles
             .Where(x => x.Username == normalizedUsername)
@@ -225,27 +200,18 @@ public class RecommendationService(IApplicationDbContext dbContext, IAnimeImport
 
         var candidates = await dbContext.Animes
             .Where(x => x.IsCatalogSeeded && !watchedSet.Contains(x.Id))
-            .Select(x => new RecommendationItemDto
-            {
-                AnimeId = x.Id,
-                Title = x.Title,
-                MainPictureMediumUrl = x.MainPictureMediumUrl,
-                MainPictureLargeUrl = x.MainPictureLargeUrl,
-                SourceType = x.SourceType.ToString(),
-                SourceAnimeId = x.SourceAnimeId,
-                Score = x.MeanScore ?? 0,
-                Reason = "Random unseen pick from global catalog"
-            })
+            .Select(x => x.ToRecommendationDto(
+                x.MeanScore ?? 0,
+                "Random unseen pick from global catalog"))
             .ToListAsync(cancellationToken);
 
-        var candidateList = candidates.ToList();
-        if (candidateList.Count == 0)
+        if (candidates.Count == 0)
         {
             return Array.Empty<RecommendationItemDto>();
         }
 
         var targetCount = Math.Clamp(count, 1, 10);
-        var shuffled = candidateList.OrderBy(_ => Random.Shared.Next()).ToList();
+        var shuffled = candidates.OrderBy(_ => Random.Shared.Next()).ToList();
         return shuffled.Take(targetCount).ToList();
     }
 

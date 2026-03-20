@@ -7,9 +7,9 @@ type AnimeGridProps = {
 
 export function AnimeGrid({ items }: AnimeGridProps) {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1rem' }}>
+    <div className="anime-grid">
       {items.map((anime) => (
-        <AnimeCard key={anime.animeId} anime={anime}  />
+        <AnimeCard key={anime.animeId} anime={anime} />
       ))}
     </div>
   )

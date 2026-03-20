@@ -6,8 +6,10 @@ public class UserAnimeListItemDto
     public string Title { get; set; } = string.Empty;
     public string? MainPictureMediumUrl { get; set; }
     public string? MainPictureLargeUrl { get; set; }
+    public string? Synopsis { get; set; }
     public string Status { get; set; } = string.Empty;
     public decimal? UserScore { get; set; }
     public decimal? MeanScore { get; set; }
+    public string SourceAnimeId { get; set; } = string.Empty;
     public IReadOnlyCollection<string> Genres { get; set; } = Array.Empty<string>();
 }

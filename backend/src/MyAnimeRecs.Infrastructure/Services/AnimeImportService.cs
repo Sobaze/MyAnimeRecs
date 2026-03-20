@@ -74,6 +74,7 @@ public class AnimeImportService(IApplicationDbContext dbContext, IMalClient malC
                     MeanScore = entry.Node.Mean,
                     MainPictureMediumUrl = entry.Node.MainPicture?.Medium,
                     MainPictureLargeUrl = entry.Node.MainPicture?.Large,
+                    Synopsis = entry.Node.Synopsis,
                     CreatedAtUtc = DateTime.UtcNow
                 };
                 dbContext.Add(anime);
@@ -84,6 +85,7 @@ public class AnimeImportService(IApplicationDbContext dbContext, IMalClient malC
             anime.MeanScore = entry.Node.Mean;
             anime.MainPictureMediumUrl = entry.Node.MainPicture?.Medium;
             anime.MainPictureLargeUrl = entry.Node.MainPicture?.Large;
+            anime.Synopsis = entry.Node.Synopsis;
             if (!string.IsNullOrWhiteSpace(entry.Node.Title))
             {
                 anime.Title = entry.Node.Title;
