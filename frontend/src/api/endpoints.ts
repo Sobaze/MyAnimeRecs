@@ -4,7 +4,7 @@ export const apiEndpoints = {
 
   importMalUser: (username: string) => `/api/import/mal/${encodeURIComponent(username)}`,
 
-  getUserAnimeList: (username: string, status = 'completed') =>
+  getUserAnimeList: (username: string, status: string) =>
     `/api/users/${encodeURIComponent(username)}/anime-list?status=${encodeURIComponent(status)}`,
 
   getUserTopGenres: (username: string, limit = 10) =>

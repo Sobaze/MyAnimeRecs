@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.EntityFrameworkCore;
 using MyAnimeRecs.Application.Abstractions;
 using MyAnimeRecs.Application.Models.Import;
@@ -29,8 +30,6 @@ public class AnimeImportService(IApplicationDbContext dbContext, IMalClient malC
             dbContext.Add(profile);
         }
 
-        var completedEntries = await malClient.GetUserAnimeListAsync(username, "completed", cancellationToken);
-
         var genresByNormalizedName = await dbContext.Genres
             .ToDictionaryAsync(x => x.NormalizedName, StringComparer.OrdinalIgnoreCase, cancellationToken);
 
@@ -53,6 +52,16 @@ public class AnimeImportService(IApplicationDbContext dbContext, IMalClient malC
 
         var createdAnimeCount = 0;
         var linkedUserEntryCount = 0;
+
+        var statusesToImport = new (string MalStatus, AnimeListStatus InternalStatus)[]
+            {
+                ("completed", AnimeListStatus.Completed),
+                ("watching", AnimeListStatus.Watching),
+                ("plan_to_watch", AnimeListStatus.Planned),
+            };
+
+
+        var completedEntries = await malClient.GetUserAnimeListAsync(username, "completed", cancellationToken);
         foreach (var entry in completedEntries)
         {
             if (entry.Node.Id <= 0)

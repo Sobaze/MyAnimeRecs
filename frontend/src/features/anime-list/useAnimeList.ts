@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import type { UserAnimeListItem, AnimeListStatus } from '../../types/api'
+import type { UserAnimeListItem } from '../../types/api'
 import { api } from '../../api/client'
 import { ApiError } from '../../api/errors'
 import { normalizeUsername } from '../../utils/normalize'
@@ -8,7 +8,7 @@ type UseAnimeListResult = {
   isLoading: boolean
   error: string | null
   items: UserAnimeListItem[]
-  load: (username: string, status: AnimeListStatus) => Promise<void>
+  load: (username: string) => Promise<void>
 }
 
 export function useAnimeList(): UseAnimeListResult {
@@ -16,7 +16,7 @@ export function useAnimeList(): UseAnimeListResult {
   const [error, setError] = useState<string | null>(null)
   const [items, setItems] = useState<UserAnimeListItem[]>([])
 
-  const load = useCallback(async (username: string, status: AnimeListStatus): Promise<void> => {
+  const load = useCallback(async (username: string): Promise<void> => {
     const normalizedUsername = normalizeUsername(username)
     if (!normalizedUsername) {
       setError('Username is required.')
@@ -26,7 +26,7 @@ export function useAnimeList(): UseAnimeListResult {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await api.getUserAnimeList(normalizedUsername, status)
+      const response = await api.getUserAnimeList(normalizedUsername, 'completed')
       setItems(response)
     } catch (error: unknown) {
       if (error instanceof ApiError) {

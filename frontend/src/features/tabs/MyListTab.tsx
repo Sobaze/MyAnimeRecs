@@ -11,9 +11,8 @@ type MyListTabProps = {
 
 export function MyListTab({ username }: MyListTabProps) {
   const { isLoading, error, items, load } = useAnimeList()
-
   useEffect(() => {
-    load(username, 'completed')
+    load(username)
   }, [username, load])
 
   if (isLoading) return <LoadingState text="Loading your anime list..." />
@@ -21,7 +20,8 @@ export function MyListTab({ username }: MyListTabProps) {
   if (items.length === 0) return <EmptyState text="No anime found in your completed list." />
 
   return (
+
   <AnimeGrid items={items} />
-  
+
 )
 }
