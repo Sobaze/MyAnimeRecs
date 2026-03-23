@@ -1,18 +1,21 @@
-This is a site for my personal use to get anime recommendations. It will be based on what animes I have already seen then based on that suggest new ones that I might like.
-It will use my MyAnimeList(MAL) to get information on what I have seen and also what rankings I have given.
+# MyAnimeRecs
 
+A fullstack web application for anime recommendations based on your MyAnimeList profile. It is based on your completed list and will give you random recommendations you have not seen.
+You can also use it to give recommendation to friends, entering the genres they like and then it will go by animes that is in your completed list to get a recommendation.
 
-I will also have a section to do a random generator that will slump an anime for me, that I haven't seen before.
+## Features
+- Fetches your anime history via the MyAnimeList API
+- Generates recommendations based on what you have already watched and rated
+- Random anime generator for titles you have not seen yet
+- Recommends anime to friends based on their preferred genres
 
+## Tech Stack
+- **Frontend:** React, TypeScript, CSS
+- **Backend:** .NET / C#
+- **Database:** SQLite
+- **API:** MyAnimeList (MAL)
 
-Also will include a section where it will generate out recommendations for friends based on what I have seen from my MAL and suggest stuff that fit their liked genres.
-
-
-It will is built in React on the frontend and using a .DOTNET backend.
-
-
-To run the project
-
+## Getting Started
 Frontend:  cd frontend -> npm run dev
 
 Backend: cd backend -> dotnet run --project src/MyAnimeRecs.Api
