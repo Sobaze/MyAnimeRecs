@@ -8,14 +8,22 @@ import { ErrorState } from './components/common/ErrorState'
 import { MyListTab } from './features/tabs/MyListTab'
 import { RandomTab } from './features/tabs/RandomTab'
 import { FriendRecsTab } from './features/tabs/FriendRecsTab'
+import { NewRecsForUser } from './features/tabs/NewRecsForUser'
 
-type Tab = 'random' | 'friend' | 'list'
+type Tab = 'random' | 'friend' | 'list' | 'forUser'
 
 function App() {
   const [inputUsername, setInputUsername] = useState('')
   const [activeTab, setActiveTab] = useState<Tab>('list')
 
   const { step, error, confirmedUsername, startImport, reset } = useImportFlow()
+
+  const TAB_OPTIONS: {key: Tab, label: string}[] = [
+    { key: 'list', label: 'My Completed List' },
+    { key: 'forUser', label: 'New Recommendations' },
+    { key: 'random', label: 'Random Recommendations' },
+    { key: 'friend', label: 'Recommendations for Friend' },
+  ]
 
   function handleImport() {
     startImport(inputUsername)
@@ -52,30 +60,23 @@ function App() {
           </button>
         </div>
         <nav className="tabs-nav">
-          <button
-            type="button"
-            onClick={() => setActiveTab('list')}
-          disabled={activeTab === 'list'}
-        >
-          My List
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('random')}
-          disabled={activeTab === 'random'}
-        >
-          Random
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('friend')}
-          disabled={activeTab === 'friend'}
-          >
-            For a Friend
-          </button>
+          {TAB_OPTIONS.map((option => (
+            <button
+              key={option.key}
+              type="button"
+              onClick={() => setActiveTab(option.key)}
+              className={activeTab === option.key ? 'is-active' : ''}
+            >
+              {option.label}
+            </button>
+          )))}   
+        
         </nav>
         <div hidden={activeTab !== 'list'}>
           <MyListTab username={confirmedUsername} />
+        </div>
+        <div hidden={activeTab !== 'forUser'}>
+          <NewRecsForUser username={confirmedUsername} />
         </div>
         <div hidden={activeTab !== 'random'}>
           <RandomTab username={confirmedUsername} />

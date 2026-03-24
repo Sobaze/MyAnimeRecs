@@ -37,9 +37,9 @@ export function FriendRecsTab({ username }: FriendRecsTabProps) {
       {genresLoading && <LoadingState text="Loading your genres..." />}
       {genresError && <ErrorState message={genresError} />}
       {!genresLoading && genres.length > 0 && (
-        <div>
+        <div className='genre-grid'>
           {genres.map(genre => (
-            <label key={genre.name}>
+            <label key={genre.name} className='genre-options'>
               <input
                 type="checkbox"
                 checked={selectedGenres.includes(genre.name)}

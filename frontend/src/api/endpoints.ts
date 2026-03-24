@@ -15,4 +15,6 @@ export const apiEndpoints = {
 
   recommendRandom: (username: string, count = 3) =>
     `/api/recommendations/random/${encodeURIComponent(username)}?count=${count}`,
+  recommendNewForUser: (username: string) =>
+    `/api/recommendations/by-mal/${encodeURIComponent(username)}`
 }

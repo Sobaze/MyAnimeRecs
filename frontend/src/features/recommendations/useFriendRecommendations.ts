@@ -17,7 +17,7 @@ export function useFriendRecommendations(): UseFriendRecommendationsResult {
   const [error, setError] = useState<string | null>(null)
   const [items, setItems] = useState<RecommendationItem[]>([])
 
-  const load = useCallback(async (username: string, genres: string[], maxItems = 10): Promise<void> => {
+  const load = useCallback(async (username: string, genres: string[], maxItems?: number): Promise<void> => {
     const normalizedUsername = normalizeUsername(username)
     if (!normalizedUsername) {
       setError('Username is required.')
@@ -31,13 +31,13 @@ export function useFriendRecommendations(): UseFriendRecommendationsResult {
       return
     }
 
-    const maxAmount = maxItems > 0 ? maxItems : 10
+    maxItems = 12 // Default to 12 recommendations if maxItems is not provided
     setIsLoading(true)
     setError(null)
     try {
       const response = await api.recommendForFriend(normalizedUsername, {
         genres: dedupedGenres,
-        maxItems: maxAmount,
+        maxItems: maxItems,
       })
       setItems(response)
       setError(null)

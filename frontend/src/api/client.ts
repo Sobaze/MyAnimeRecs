@@ -91,7 +91,18 @@ export async function recommendForFriend(
   const data = await parseJsonResponse<RecommendationItem[]>(response)
   return data
 }
-
+//Recommend new anime that the user hasn't seen yet, based on their completed anime list. This endpoint will return recommendations that are not in the user's anime list at all, so it can include anime that the user has already started but not completed.
+export async function recommendNewForUser(username: string, maxItems: number): Promise<RecommendationItem[]> {
+  const response = await fetch(`${apiEndpoints.recommendNewForUser(username)}?maxItems=${maxItems}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+  })
+  const data = await parseJsonResponse<RecommendationItem[]>(response)
+  return data
+}
 // Recommend random anime that the user hasn't seen yet, based on their completed anime list. 
 export async function recommendRandom(username: string, count = 3): Promise<RecommendationItem[]> {
   const response = await fetch(apiEndpoints.recommendRandom(username, count), {
@@ -152,4 +163,5 @@ export const api = {
   getUserTopGenres,
   recommendForFriend,
   recommendRandom,
+  recommendNewForUser
 }
