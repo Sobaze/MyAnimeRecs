@@ -27,13 +27,13 @@
   border: none;
   border-radius: 8px;
   background: #e0d7c1;
-  opacity: 0.75;
   color: #312c22;
   font-weight: 600;
   cursor: pointer;
 }
 .tabs-nav button.is-active {
   opacity: 1;
+  background: #ecca72;
 }
 
 .secondary {
@@ -55,6 +55,11 @@
   border-radius: 10px;
   background: #fffdf8;
   cursor: pointer;
+}
+.genre-options.is-selected {
+  background: #e9bd4d;
+  border-color: #ecca72;
+  color: #312c22;
 }
 .anime-grid {
   display: grid;

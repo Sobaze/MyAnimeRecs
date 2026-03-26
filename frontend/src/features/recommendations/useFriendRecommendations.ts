@@ -31,13 +31,13 @@ export function useFriendRecommendations(): UseFriendRecommendationsResult {
       return
     }
 
-    maxItems = 12 // Default to 12 recommendations if maxItems is not provided
+    const maxAmount = maxItems && maxItems > 0 ? maxItems : 12
     setIsLoading(true)
     setError(null)
     try {
       const response = await api.recommendForFriend(normalizedUsername, {
         genres: dedupedGenres,
-        maxItems: maxItems,
+        maxItems: maxAmount,
       })
       setItems(response)
       setError(null)

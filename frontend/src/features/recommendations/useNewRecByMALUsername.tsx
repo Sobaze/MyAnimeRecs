@@ -8,7 +8,7 @@ type UseNewRecommendationsForUserResult = {
   isLoading: boolean;
   error: string | null;
   items: RecommendationItem[];
-  load: (username: string) => Promise<void>;
+  load: (username: string, maxItems?: number) => Promise<void>;
 };
 
 export function useNewRecommendationsForUser(): UseNewRecommendationsForUserResult {
@@ -16,7 +16,7 @@ export function useNewRecommendationsForUser(): UseNewRecommendationsForUserResu
   const [error, setError] = useState<string | null>(null);
   const [items, setItems] = useState<RecommendationItem[]>([])
 
-    const load = useCallback(async (username: string): Promise<void> => {
+    const load = useCallback(async (username: string, maxItems?: number): Promise<void> => {
     const normalizedUsername = normalizeUsername(username);
     if (!normalizedUsername) {
       setError("Username is required.");
@@ -25,7 +25,7 @@ export function useNewRecommendationsForUser(): UseNewRecommendationsForUserResu
     }
     setIsLoading(true);
     setError(null);
-    const maxItems = 12; // Limit the number of recommendations to fetch
+    maxItems = maxItems && maxItems > 0 ? maxItems : 12
     try {
       const response = await api.recommendNewForUser(normalizedUsername, maxItems);
       setItems(response);

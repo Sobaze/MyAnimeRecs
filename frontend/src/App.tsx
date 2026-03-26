@@ -54,7 +54,7 @@ function App() {
   return (
       <AppShell>
         <div className="topbar">
-          <p className="identity">Current user: <strong>{confirmedUsername}</strong></p>
+          <p className="identity">MAL users list: <strong>{confirmedUsername}</strong></p>
           <button type="button" className="secondary" onClick={handleChangeUser}>
             Change user
           </button>
