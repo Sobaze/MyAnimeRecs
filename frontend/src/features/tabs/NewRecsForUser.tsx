@@ -32,13 +32,14 @@ export function NewRecsForUser({ username }: NewRecsForUserProps) {
         {!error && items.length > 0 && (
           <RecommendationGrid items={items} />
         )}
-        <button
-          type="button"
-          onClick={handleRequestMore}
-        >
-          Load more recommendations
-        </button>
-      
+        { items.length > 0 && (
+          <button
+            type="button"
+            onClick={handleRequestMore}
+          >
+            Load more recommendations
+          </button>
+        )}
     </div>
   )
 }
