@@ -19,11 +19,24 @@ export function MyListTab({ username }: MyListTabProps) {
 
   const sortedItems = [...items]
   if (sortOrder === 'score') {
-    sortedItems.sort((a, b) => (b.userScore || 0) - (a.userScore || 0))
+    sortedItems.sort((a, b) => {
+    const scoreDiff = (b.userScore ?? 0) - (a.userScore ?? 0) // primary: score desc
+    if (scoreDiff !== 0) {
+      return scoreDiff
+    }
+    return a.title.localeCompare(b.title) // secondary: title asc
+  })
   } else if (sortOrder === 'title') {
     sortedItems.sort((a, b) => a.title.localeCompare(b.title))
   } else if (sortOrder === 'mean score') {
-    sortedItems.sort((a, b) => (b.meanScore || 0) - (a.meanScore || 0))
+    
+    sortedItems.sort((a, b) => {
+      const meanScoreDiff = (b.meanScore || 0) - (a.meanScore || 0)
+      if (meanScoreDiff !== 0) { 
+        return meanScoreDiff
+      }
+      return a.title.localeCompare(b.title) // secondary: title asc
+    })
   }
  
   return (
@@ -39,7 +52,8 @@ export function MyListTab({ username }: MyListTabProps) {
           </select>
         </label>
       </div>
-      {(isLoading) && <LoadingState text="Loading your anime list..." />}
+
+      {isLoading && <LoadingState text="Loading your anime list..." />}
       {error && <ErrorState message={error} />}
       {items.length === 0 && <EmptyState text="No anime found in your completed list." />}
 
