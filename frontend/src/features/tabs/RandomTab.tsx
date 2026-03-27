@@ -21,10 +21,12 @@ export function RandomTab({ username }: RandomTabProps) {
   }
 
   return (
-    <div>
-      <button type="button" onClick={handleReroll} disabled={isLoading}>
-        Roll new recommendations
-      </button>
+    <div className="tab-panel">
+      <div className="tab-controls">
+        <button type="button" onClick={handleReroll} disabled={isLoading}>
+          Roll new recommendations
+        </button>
+      </div>
       {isLoading && <LoadingState text="Finding recommendations..." />}
       {error && <ErrorState message={error} />}
       {!isLoading && !error && items.length === 0 && (

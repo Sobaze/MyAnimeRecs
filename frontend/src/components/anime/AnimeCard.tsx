@@ -26,7 +26,7 @@ export function AnimeCard({ anime }: AnimeCardProps) {
       </div>
       <footer className="card-score-row">
         <span>User score: {anime.userScore ?? 'N/A'}</span>
-        <span>MAL avg: {anime.meanScore ?? 'N/A'}</span>
+        <span>MAL score: {anime.meanScore ?? 'N/A'}</span>
       </footer>
     </article>
   )

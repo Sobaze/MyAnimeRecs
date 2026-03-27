@@ -22,9 +22,11 @@ export function NewRecsForUser({ username }: NewRecsForUserProps) {
   }
 
   return (
-    <div>
-      
-        {isLoading && <LoadingState text="Finding recommendations..." />}
+    <div className="tab-panel">
+      <div className="tab-controls">
+        <div className="tab-controls-spacer" />
+      </div>
+        {isLoading && items.length === 0 && <LoadingState text="Finding recommendations..." />}
         {error && <ErrorState message={error} />}
         {!isLoading && !error && items.length === 0 && (
           <EmptyState text="No new recommendations available." />
@@ -32,13 +34,17 @@ export function NewRecsForUser({ username }: NewRecsForUserProps) {
         {!error && items.length > 0 && (
           <RecommendationGrid items={items} />
         )}
-        { items.length > 0 && (
-          <button
-            type="button"
-            onClick={handleRequestMore}
-          >
-            Load more recommendations
-          </button>
+        {items.length > 0 && (
+          <div className="tab-bottom-actions">
+            <button
+              type="button"
+              onClick={handleRequestMore}
+              disabled={isLoading || getMoreRec >= 50}
+            >
+              Load more recommendations
+            </button>
+            {isLoading && <span className="inline-spinner" aria-hidden="true" />}
+          </div>
         )}
     </div>
   )

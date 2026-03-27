@@ -47,7 +47,6 @@ export function FriendRecsTab({ username }: FriendRecsTabProps) {
   }
 
   const canLoadMore = hasRequestedRecs
-    && !recsLoading
     && !recsError
     && recs.length > 0
     && selectedGenres.length > 0
@@ -55,7 +54,7 @@ export function FriendRecsTab({ username }: FriendRecsTabProps) {
     && maxItems < 50
 
   return (
-    <div>
+    <div className="tab-panel">
       {genresLoading && <LoadingState text="Loading your genres..." />}
       {genresError && <ErrorState message={genresError} />}
       {!genresLoading && genres.length > 0 && (
@@ -75,14 +74,16 @@ export function FriendRecsTab({ username }: FriendRecsTabProps) {
           })}
         </div>
       )}
-      <button
-        type="button"
-        onClick={handleSubmit}
-        disabled={recsLoading || selectedGenres.length === 0}
-      >
-        Get recommendations
-      </button>
-      {recsLoading && <LoadingState text="Finding recommendations for your friend..." />}
+      <div className="tab-controls">
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={recsLoading || selectedGenres.length === 0}
+        >
+          Get recommendations
+        </button>
+      </div>
+      {recsLoading && recs.length === 0 && <LoadingState text="Finding recommendations for your friend..." />}
       {recsError && <ErrorState message={recsError} />}
       {hasRequestedRecs && !recsLoading && !recsError && recs.length === 0 && selectedGenres.length > 0 && (
         <EmptyState text="No recommendations found for those genres." />
@@ -91,13 +92,16 @@ export function FriendRecsTab({ username }: FriendRecsTabProps) {
         <RecommendationGrid items={recs} />
       )}
       {canLoadMore && (
-        <button
-          type="button"
-          onClick={handleRequestMore}
-          disabled={recsLoading || selectedGenres.length === 0}
-        >
-          Load more recommendations
-        </button>
+        <div className="tab-bottom-actions">
+          <button
+            type="button"
+            onClick={handleRequestMore}
+            disabled={recsLoading || selectedGenres.length === 0}
+          >
+            Load more recommendations
+          </button>
+          {recsLoading && <span className="inline-spinner" aria-hidden="true" />}
+        </div>
       )}
     </div>
   )
