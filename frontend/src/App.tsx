@@ -38,12 +38,14 @@ function App() {
   if (!confirmedUsername) {
     return (
       <AppShell>
-        <ImportForm
-          username={inputUsername}
-          onUsernameChange={setInputUsername}
-          onSubmit={handleImport}
-          disabled={step === 'catalog' || step === 'import'}
-        />
+        <div className='import-form' >
+          <ImportForm
+            username={inputUsername}
+            onUsernameChange={setInputUsername}
+            onSubmit={handleImport}
+            disabled={step === 'catalog' || step === 'import'}
+          />
+        </div>
         {step === 'catalog' && <LoadingState text="Preparing anime catalog..." />}
         {step === 'import' && <LoadingState text="Importing your MAL list..." />}
         {error && <ErrorState message={error} />}
