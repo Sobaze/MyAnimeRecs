@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import { useImportFlow } from './features/import/useImportFlow'
 import { AppShell } from './components/layout/AppShell'
@@ -15,6 +15,7 @@ type Tab = 'random' | 'friend' | 'list' | 'forUser'
 function App() {
   const [inputUsername, setInputUsername] = useState('')
   const [activeTab, setActiveTab] = useState<Tab>('list')
+  const [showScrollTop, setShowScrollTop] = useState(false)
 
   const { step, error, confirmedUsername, startImport, reset } = useImportFlow()
 
@@ -24,6 +25,13 @@ function App() {
     { key: 'random', label: 'Random Recommendations' },
     { key: 'friend', label: 'Recommendations for Friend' },
   ]
+  useEffect(() => {
+    function handleScroll() {
+      setShowScrollTop(window.scrollY > 300)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   function handleImport() {
     startImport(inputUsername)
@@ -85,6 +93,18 @@ function App() {
         </div>
       <div hidden={activeTab !== 'friend'}>
         <FriendRecsTab username={confirmedUsername} />
+      </div>
+      <div>
+        {showScrollTop && (
+          <button
+            className="scroll-top-btn"
+            type='button'
+            aria-label='Scroll to top'
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            ↑
+          </button>
+        )}
       </div>
     </AppShell>
   )

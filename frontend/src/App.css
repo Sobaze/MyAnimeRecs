@@ -229,6 +229,29 @@ input { background: #22252a; color: #ece7dc; border: 1px solid #434851; }
   border-color: #4b5059;
   box-shadow: 0 0 0 2px rgba(236, 202, 114, 0.4);
 }
+.scroll-top-btn {
+  position: fixed;
+  right: max(1rem, calc((100vw - 1200px) / 2.15 + 0.5rem));
+  bottom: 1.2rem;
+  z-index: 1000;
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  background: #141f3b;
+  color: #fff0d8;
+  border: 1px solid #4b5059;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  line-height: 2;
+  font-weight: 700;
+}
+.scroll-top-btn:hover {
+  background: #1d2b52;
+}
 
 @media (max-width: 640px) {
   .app-shell {
