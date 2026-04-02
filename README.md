@@ -7,6 +7,10 @@ A personal full-stack anime recommendation app built around my public MyAnimeLis
 - Generate random unseen anime picks
 - Recommend anime to friends based on genres you pick from your completed history
 
+##Demo
+
+https://github.com/user-attachments/assets/010d2e6a-b185-49cf-8507-9dbac5c89e3b
+
 ## Scope
 
 This project is intentionally centered on completed-list-based recommendations.
