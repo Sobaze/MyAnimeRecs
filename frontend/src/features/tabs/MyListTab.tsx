@@ -20,14 +20,14 @@ export function MyListTab({ username }: MyListTabProps) {
   const sortedItems = [...items]
   if (sortOrder === 'score') {
     sortedItems.sort((a, b) => {
-    const scoreDiff = (b.userScore ?? 0) - (a.userScore ?? 0) // primary: score desc
-    if (scoreDiff !== 0) {
-      return scoreDiff
-    }
+      const scoreDiff = (b.userScore ?? 0) - (a.userScore ?? 0) // primary: score desc
+      if (scoreDiff !== 0) {
+        return scoreDiff
+      }
     return a.title.localeCompare(b.title) // secondary: title asc
   })
   } else if (sortOrder === 'title') {
-    sortedItems.sort((a, b) => a.title.localeCompare(b.title))
+      sortedItems.sort((a, b) => a.title.localeCompare(b.title))
   } else if (sortOrder === 'mean score') {
     
     sortedItems.sort((a, b) => {
@@ -58,7 +58,7 @@ export function MyListTab({ username }: MyListTabProps) {
       {!isLoading && !error && items.length === 0 && <EmptyState text="No anime found in your completed list." />}
 
 
-      { !isLoading && !error && items.length > 0 && <AnimeGrid items={sortedItems} /> }
+      {!isLoading && !error && items.length > 0 && <AnimeGrid items={sortedItems} /> }
     </div>
   )
 }

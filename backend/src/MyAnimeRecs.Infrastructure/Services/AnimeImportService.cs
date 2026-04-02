@@ -53,7 +53,6 @@ public class AnimeImportService(IApplicationDbContext dbContext, IMalClient malC
         var createdAnimeCount = 0;
         var linkedUserEntryCount = 0;
 
-
         var completedEntries = await malClient.GetUserAnimeListAsync(username, "completed", cancellationToken);
         foreach (var entry in completedEntries)
         {
