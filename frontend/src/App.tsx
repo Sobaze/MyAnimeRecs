@@ -86,7 +86,7 @@ function App() {
           <MyListTab username={confirmedUsername} />
         </div>
         <div hidden={activeTab !== 'forUser'}>
-          <NewRecsForUser username={confirmedUsername} />
+          <NewRecsForUser key={confirmedUsername} username={confirmedUsername} />
         </div>
         <div hidden={activeTab !== 'random'}>
           <RandomTab username={confirmedUsername} />

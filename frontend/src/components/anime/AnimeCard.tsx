@@ -3,7 +3,6 @@ import type { UserAnimeListItem } from '../../types/api'
 type AnimeCardProps = {
   anime: UserAnimeListItem
 }
-///${anime.title.replace(/\s+/g, '_') eventually add this for cleaner urls, but for now just link to the anime page on MAL using the sourceAnimeId
 export function AnimeCard({ anime }: AnimeCardProps) {
   const animeUrl = `https://myanimelist.net/anime/${anime.sourceAnimeId}`
   return (

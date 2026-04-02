@@ -55,10 +55,10 @@ export function MyListTab({ username }: MyListTabProps) {
 
       {isLoading && <LoadingState text="Loading your anime list..." />}
       {error && <ErrorState message={error} />}
-      {items.length === 0 && <EmptyState text="No anime found in your completed list." />}
+      {!isLoading && !error && items.length === 0 && <EmptyState text="No anime found in your completed list." />}
 
 
-      <AnimeGrid items={sortedItems} />
+      { !isLoading && !error && items.length > 0 && <AnimeGrid items={sortedItems} /> }
     </div>
   )
 }
